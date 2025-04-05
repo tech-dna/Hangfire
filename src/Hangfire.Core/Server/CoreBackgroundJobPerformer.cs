@@ -37,11 +37,13 @@ namespace Hangfire.Server
 
         private readonly JobActivator _activator;
         private readonly TaskScheduler _taskScheduler;
+        private readonly IJobFilterProvider _filterProvider;
 
-        public CoreBackgroundJobPerformer([NotNull] JobActivator activator, [CanBeNull] TaskScheduler taskScheduler)
+        public CoreBackgroundJobPerformer([NotNull] JobActivator activator, [CanBeNull] TaskScheduler taskScheduler, IJobFilterProvider filterProvider)
         {
             _activator = activator ?? throw new ArgumentNullException(nameof(activator));
             _taskScheduler = taskScheduler;
+            _filterProvider = filterProvider;
         }
 
         public object Perform(PerformContext context)
@@ -54,7 +56,8 @@ namespace Hangfire.Server
                 {
                     throw new InvalidOperationException("Can't perform a background job with a null job.");
                 }
-                
+                var filterInfo = new JobFilterInfo(_filterProvider.GetFilters(context.BackgroundJob.Job));
+                filterInfo.ScopeSetup.GetEnumerator().MoveNext
                 if (!context.BackgroundJob.Job.Method.IsStatic)
                 {
                     instance = scope.Resolve(context.BackgroundJob.Job.Type);

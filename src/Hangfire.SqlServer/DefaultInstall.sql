@@ -93,6 +93,11 @@ BEGIN
     );
     PRINT 'Created table [HangFire].[Job]';
 
+	    CREATE TABLE [HangFire].[Job2] (
+        [Id] [int] IDENTITY(1,1) NOT NULL,
+		[StateId] [int] NULL
+    );
+
 	CREATE NONCLUSTERED INDEX [IX_HangFire_Job_StateName] ON [HangFire].[Job] ([StateName] ASC);
 	PRINT 'Created index [IX_HangFire_Job_StateName]';
         

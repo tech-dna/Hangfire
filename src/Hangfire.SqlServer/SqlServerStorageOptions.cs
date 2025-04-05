@@ -123,7 +123,7 @@ namespace Hangfire.SqlServer
         }
 
         public bool PrepareSchemaIfNecessary { get; set; }
-
+  
         public TimeSpan JobExpirationCheckInterval 
         {
             get { return _jobExpirationCheckInterval; } 

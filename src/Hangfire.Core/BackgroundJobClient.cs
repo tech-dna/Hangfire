@@ -138,7 +138,7 @@ namespace Hangfire
                 }
             }
         }
-
+        /// <inheritdoc />
         /// <inheritdoc />
         public string Create(Job job, IState state) => Create(job, state, null);
 
@@ -153,6 +153,7 @@ namespace Hangfire
                 using (var connection = _storage.GetConnection())
                 {
                     var context = new CreateContext(_storage, connection, job, state, parameters);
+
                     var backgroundJob = _factory.Create(context);
 
                     return backgroundJob?.Id;

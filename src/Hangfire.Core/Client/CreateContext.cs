@@ -48,8 +48,9 @@ namespace Hangfire.Client
             [NotNull] IStorageConnection connection,
             [NotNull] Job job,
             [CanBeNull] IState initialState,
-            [CanBeNull] IDictionary<string, object> parameters)
-            : this(storage, connection, job, initialState, parameters, EmptyProfiler.Instance, null)
+            [CanBeNull] IDictionary<string, object> parameters,
+            JobActivator activator = null)
+            : this(storage, connection, job, initialState, parameters, EmptyProfiler.Instance, null, activator)
         {
         }
 
@@ -60,7 +61,8 @@ namespace Hangfire.Client
             [CanBeNull] IState initialState,
             [CanBeNull] IDictionary<string, object> parameters,
             [NotNull] IProfiler profiler,
-            [CanBeNull] IDictionary<string, object> items)
+            [CanBeNull] IDictionary<string, object> items,
+            JobActivator activator = null)
         {
             if (storage == null) throw new ArgumentNullException(nameof(storage));
             if (connection == null) throw new ArgumentNullException(nameof(connection));
@@ -74,6 +76,7 @@ namespace Hangfire.Client
 
             Items = items ?? new Dictionary<string, object>();
             Parameters = parameters ?? new Dictionary<string, object>();
+            Activator = activator;
         }
 
         [NotNull]
@@ -95,6 +98,7 @@ namespace Hangfire.Client
             
         [NotNull]
         public Job Job { get; }
+        public JobActivator Activator { get; }
 
         /// <summary>
         /// Gets the initial state of the creating job. Note, that

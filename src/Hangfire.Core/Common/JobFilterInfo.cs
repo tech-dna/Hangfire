@@ -37,10 +37,12 @@ namespace Hangfire.Common
             ServerFilters = new FilterCollection<IServerFilter>(filtersList);
             ElectStateFilters = new FilterCollection<IElectStateFilter>(filtersList);
             ApplyStateFilters = new FilterCollection<IApplyStateFilter>(filtersList);
+            ScopeSetup = new FilterCollection<IScopeSetup>(filtersList);
             ClientExceptionFiltersReversed = new ReversedFilterCollection<IClientExceptionFilter>(filtersList);
             ServerExceptionFiltersReversed = new ReversedFilterCollection<IServerExceptionFilter>(filtersList);
         }
 
+        public FilterCollection<IScopeSetup> ScopeSetup { get; }
         /// <summary>
         /// Gets all the client filters in the application.
         /// </summary>

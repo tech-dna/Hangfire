@@ -14,8 +14,11 @@
 // License along with Hangfire. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Hangfire.Annotations;
 using Hangfire.Common;
+using Hangfire.Server;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hangfire
@@ -35,7 +38,12 @@ namespace Hangfire
             {
                 return new BackgroundJobClient(storage, factory, stateChanger);
             }
+            var scopeSetups = _serviceProvider.GetService<IEnumerable<IScopeSetup>>();
+            foreach (var scopeSetup in scopeSetups)
+            {
 
+            }
+            
             return new BackgroundJobClient(
                 storage,
                 _serviceProvider.GetRequiredService<IJobFilterProvider>());
@@ -43,6 +51,7 @@ namespace Hangfire
 
         public IBackgroundJobClient GetClient(JobStorage storage)
         {
+            //var s = _serviceProvider.GetService<>
             return GetClientV2(storage);
         }
 

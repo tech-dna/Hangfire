@@ -19,7 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Hangfire.AspNetCore
 {
-    internal sealed class AspNetCoreJobActivatorScope : JobActivatorScope
+    public sealed class AspNetCoreJobActivatorScope : JobActivatorScope
     {
         private readonly IServiceScope _serviceScope;
 

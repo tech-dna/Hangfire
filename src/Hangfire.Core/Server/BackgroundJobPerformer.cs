@@ -51,7 +51,7 @@ namespace Hangfire.Server
             [NotNull] IJobFilterProvider filterProvider,
             [NotNull] JobActivator activator,
             [CanBeNull] TaskScheduler taskScheduler)
-            : this(filterProvider, new CoreBackgroundJobPerformer(activator, taskScheduler))
+            : this(filterProvider, new CoreBackgroundJobPerformer(activator, taskScheduler, filterProvider))
         {
         }
 

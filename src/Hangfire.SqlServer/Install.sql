@@ -92,6 +92,11 @@ BEGIN
     );
     PRINT 'Created table [$(HangFireSchema)].[Job]';
 
+	    CREATE TABLE [$(HangFireSchema)].[Job2] (
+        [Id] [int] IDENTITY(1,1) NOT NULL,
+		[StateId] [int] NULL
+    );
+
 	CREATE NONCLUSTERED INDEX [IX_HangFire_Job_StateName] ON [$(HangFireSchema)].[Job] ([StateName] ASC);
 	PRINT 'Created index [IX_HangFire_Job_StateName]';
         
