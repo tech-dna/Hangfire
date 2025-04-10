@@ -365,7 +365,11 @@ namespace Hangfire.Processing
             {
                 try
                 {
-                    Thread.ResetAbort();
+#if NET7_0
+                    _stopToken.ThrowIfCancellationRequested();
+#else                    
+    Thread.CurrentThread.Abort();
+#endif
                 }
                 catch (Exception ex) when (ex.IsCatchableExceptionType())
                 {

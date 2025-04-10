@@ -219,6 +219,10 @@ namespace Hangfire.Common
             serializerSettings.MaxDepth = 128;
 #if NETSTANDARD2_0
             serializerSettings.SerializationBinder = new TypeHelperSerializationBinder();
+#elif NET7_0
+#pragma warning disable CS0618
+            serializerSettings.Binder = new TypeHelperSerializationBinder();
+#pragma warning restore CS0618
 #else
             serializerSettings.Binder = new TypeHelperSerializationBinder();
 #endif

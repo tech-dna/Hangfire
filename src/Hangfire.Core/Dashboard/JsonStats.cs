@@ -42,7 +42,11 @@ namespace Hangfire.Dashboard
             var settings = new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
+#if !NET7_0
                 Converters = new JsonConverter[]{ new StringEnumConverter { CamelCaseText = true } }
+#else
+                Converters = new JsonConverter[]{ new StringEnumConverter(new CamelCaseNamingStrategy()) }
+#endif
             };
             var serialized = JsonConvert.SerializeObject(result, settings);
 

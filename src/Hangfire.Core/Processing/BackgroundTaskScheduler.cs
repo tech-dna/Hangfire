@@ -294,7 +294,9 @@ namespace Hangfire.Processing
                         {
                             try
                             {
-                                Thread.ResetAbort();
+                                #pragma warning disable SYSLIB0006
+                                Thread.CurrentThread.Abort();
+                                #pragma warning restore SYSLIB0006
                             }
                             catch (PlatformNotSupportedException)
                             {

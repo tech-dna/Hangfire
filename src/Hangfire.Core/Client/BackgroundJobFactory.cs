@@ -71,7 +71,7 @@ namespace Hangfire.Client
 
         public IStateMachine StateMachine => _innerFactory.StateMachine;
 
-        public BackgroundJob Create(CreateContext context)
+        public virtual BackgroundJob Create(CreateContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 

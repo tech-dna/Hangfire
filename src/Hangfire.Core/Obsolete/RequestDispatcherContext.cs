@@ -31,15 +31,18 @@ namespace Hangfire.Dashboard
             [NotNull] IDictionary<string, object> owinEnvironment,
             [NotNull] Match uriMatch)
         {
+#if !NET7_0
             if (jobStorage == null) throw new ArgumentNullException(nameof(jobStorage));
             if (owinEnvironment == null) throw new ArgumentNullException(nameof(owinEnvironment));
-            if (uriMatch == null) throw new ArgumentNullException(nameof(uriMatch));
-
+#else
+            ArgumentNullException.ThrowIfNull(jobStorage);
+            ArgumentNullException.ThrowIfNull(owinEnvironment);
+#endif
             AppPath = appPath;
             StatsPollingInterval = statsPollingInterval;
             JobStorage = jobStorage;
             OwinEnvironment = owinEnvironment;
-            UriMatch = uriMatch;
+            UriMatch = uriMatch ?? throw new ArgumentNullException(nameof(uriMatch));
         }
 
         public string AppPath { get; }
@@ -48,22 +51,22 @@ namespace Hangfire.Dashboard
         public IDictionary<string, object> OwinEnvironment { get; } 
         public Match UriMatch { get; }
 
-        public static RequestDispatcherContext FromDashboardContext([NotNull] DashboardContext context)
-        {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+        //public static RequestDispatcherContext FromDashboardContext([NotNull] DashboardContext context)
+        //{
+        //    if (context == null) throw new ArgumentNullException(nameof(context));
 
-            var owinContext = context as OwinDashboardContext;
-            if (owinContext == null)
-            {
-                throw new NotSupportedException($"context must be of type '{nameof(OwinDashboardContext)}'");
-            }
-            
-            return new RequestDispatcherContext(
-                owinContext.Options.AppPath,
-                owinContext.Options.StatsPollingInterval,
-                owinContext.Storage,
-                owinContext.Environment,
-                owinContext.UriMatch);
-        }
+        //    var owinContext = context as OwinDashboardContext;
+        //    if (owinContext == null)
+        //    {
+        //        throw new NotSupportedException($"context must be of type '{nameof(OwinDashboardContext)}'");
+        //    }
+
+        //    return new RequestDispatcherContext(
+        //        owinContext.Options.AppPath,
+        //        owinContext.Options.StatsPollingInterval,
+        //        owinContext.Storage,
+        //        owinContext.Environment,
+        //        owinContext.UriMatch);
+        //}
     }
 }

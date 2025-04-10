@@ -21,19 +21,19 @@ using Hangfire.Annotations;
 namespace Hangfire.Dashboard
 {
     [Obsolete("Use IDashboardDispatcher-based dispatchers instead. Will be removed in 2.0.0.")]
-    public class RequestDispatcherWrapper : IDashboardDispatcher
+    public class RequestDispatcherWrapper //: IDashboardDispatcher
     {
-        private readonly IRequestDispatcher _dispatcher;
+        //private readonly IRequestDispatcher _dispatcher;
         
-        public RequestDispatcherWrapper([NotNull] IRequestDispatcher dispatcher)
-        {
-            if (dispatcher == null) throw new ArgumentNullException(nameof(dispatcher));
-            _dispatcher = dispatcher;
-        }
+        //public RequestDispatcherWrapper([NotNull] IRequestDispatcher dispatcher)
+        //{
+        //    if (dispatcher == null) throw new ArgumentNullException(nameof(dispatcher));
+        //    _dispatcher = dispatcher;
+        //}
 
-        public Task Dispatch(DashboardContext context)
-        {
-            return _dispatcher.Dispatch(RequestDispatcherContext.FromDashboardContext(context));
-        }
+        //public Task Dispatch(DashboardContext context)
+        //{
+        //    return _dispatcher.Dispatch(RequestDispatcherContext.FromDashboardContext(context));
+        //}
     }
 }
