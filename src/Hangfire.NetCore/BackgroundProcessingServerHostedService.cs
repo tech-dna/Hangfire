@@ -21,8 +21,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Hangfire.Annotations;
 using Hangfire.Server;
+#if NET7_0
 using Microsoft.Extensions.Hosting;
-
+#else
+using Microsoft.Extensions.Hosting;
+#endif
 namespace Hangfire
 {
     public sealed class BackgroundProcessingServerHostedService : IHostedService, IDisposable

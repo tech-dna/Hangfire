@@ -12,7 +12,7 @@
 // 
 // You should have received a copy of the GNU Lesser General Public 
 // License along with Hangfire. If not, see <http://www.gnu.org/licenses/>.
-
+#if !NET451 && !NETSTANDARD1_3
 
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,11 @@ using Hangfire.Annotations;
 using Hangfire.Client;
 using Hangfire.Server;
 using Hangfire.States;
+#if NET7_0
 using Microsoft.Extensions.Hosting;
+#else
+using Microsoft.Extensions.Hosting;
+#endif
 
 namespace Hangfire
 {
@@ -179,3 +183,4 @@ namespace Hangfire
 #endif
     }
 }
+#endif
