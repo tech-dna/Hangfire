@@ -28,7 +28,7 @@ namespace Hangfire.Core.Tests.Server
         {
             var exception = Assert.Throws<ArgumentNullException>(
                 // ReSharper disable once AssignNullToNotNullAttribute
-                () => new CoreBackgroundJobPerformer(null, null));
+                () => new CoreBackgroundJobPerformer(null, null, new JobFilterCollection()));
 
             Assert.Equal("activator", exception.ParamName);
         }
@@ -36,7 +36,7 @@ namespace Hangfire.Core.Tests.Server
         [Fact]
         public void Ctor_DoesNotThrowAnException_WhenTaskSchedulerIsNull()
         {
-            var performer = new CoreBackgroundJobPerformer(_activator.Object, null);
+            var performer = new CoreBackgroundJobPerformer(_activator.Object, null, new JobFilterCollection());
             Assert.NotNull(performer);
         }
 
@@ -828,7 +828,7 @@ namespace Hangfire.Core.Tests.Server
 
         private CoreBackgroundJobPerformer CreatePerformer(TaskScheduler taskScheduler = null)
         {
-            return new CoreBackgroundJobPerformer(_activator.Object, taskScheduler);
+            return new CoreBackgroundJobPerformer(_activator.Object, taskScheduler, new JobFilterCollection());
         }
 
         private class MyCustomTaskScheduler : TaskScheduler

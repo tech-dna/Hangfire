@@ -95,7 +95,8 @@ namespace Hangfire
                 var scopeFactory = serviceProvider.GetService<IServiceScopeFactory>();
                 if (scopeFactory != null)
                 {
-                    configurationInstance.UseActivator(new AspNetCoreJobActivator(scopeFactory));
+                    //configurationInstance.UseActivator(new AspNetCoreJobActivator(scopeFactory));
+                    configurationInstance.UseActivator(new HangfireJobActivator(scopeFactory));
                 }
 
                 // do configuration inside callback
@@ -104,7 +105,12 @@ namespace Hangfire
                 
                 return configurationInstance;
             });
-            
+            services.AddScoped<ScopedQueueClient>(sz =>
+            {
+                return new ScopedQueueClient(sz.GetService<JobStorage>(),
+                    sz.GetService<DefaultClientManagerFactory>(),
+                    sz.GetService<IEnumerable<IQueueScopeConfigurator>>());
+            });
             return services;
         }
 

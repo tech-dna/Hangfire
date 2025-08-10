@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Hangfire.Core\Hangfire.Core.csproj" />
+    <ProjectReference Include="..\..\src\Hangfire.NetCore\Hangfire.NetCore.csproj" />
   </ItemGroup>
 
   <Target Name="ChangeAliasesOfStrongNameAssemblies" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">

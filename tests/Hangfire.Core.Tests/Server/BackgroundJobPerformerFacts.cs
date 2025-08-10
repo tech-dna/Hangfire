@@ -625,7 +625,7 @@ namespace Hangfire.Core.Tests.Server
 
         private static CoreBackgroundJobPerformer CreateInnerPerformer(TaskScheduler taskScheduler)
         {
-            return new CoreBackgroundJobPerformer(new JobActivator(), taskScheduler);
+            return new CoreBackgroundJobPerformer(new JobActivator(), taskScheduler, new JobFilterCollection());
         }
 
         public static IEnumerable<object[]> GetSchedulers()
