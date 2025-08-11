@@ -4,6 +4,31 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Hangfire.AspNetCore;
 
+public class TestProvider : IServiceProvider
+{
+    private IServiceProvider _baseProvider;
+    private readonly SerializedScopes _serializedScopes;
+    public TestProvider(IServiceProvider baseProvider, SerializedScopes serializedScopes)
+    {
+        _baseProvider = baseProvider ?? throw new ArgumentNullException(nameof(baseProvider));
+        _serializedScopes = serializedScopes;
+    }
+    public object GetService(Type serviceType)
+    {
+        var ser = serviceType.IsArray ? _serializedScopes.GetAll(serviceType) : _serializedScopes.GetServiceScope(serviceType);
+
+        if (ser != null)
+        {
+            return ser;
+        }
+
+        //var s = ActivatorUtilities.GetServiceOrCreateInstance(this, serviceType);
+
+        return serviceType == typeof(IServiceProvider) ?
+            this
+            : (_baseProvider.GetService(serviceType) ?? ActivatorUtilities.CreateInstance(this, serviceType));
+    }
+}
 public class HangfireJobActivatorScope : JobActivatorScope
 {
     private readonly IServiceScope _serviceScope;
@@ -18,16 +43,15 @@ public class HangfireJobActivatorScope : JobActivatorScope
 
     public override object Resolve(Type type)
     {
-        var ser = type.IsArray ? _serializedScopes.GetAll(type) : _serializedScopes.GetServiceScope(type);
+        //var ser = type.IsArray ? _serializedScopes.GetAll(type) : _serializedScopes.GetServiceScope(type);
 
-        if (ser != null)
-        {
-            return ser;
-        }
+        //if (ser != null)
+        //{
+        //    return ser;
+        //}
 
-        return type == typeof(IServiceProvider) ?
-            _serviceScope.ServiceProvider
-            : ActivatorUtilities.GetServiceOrCreateInstance(ServiceProvider, type);
+        //return ActivatorUtilities.GetServiceOrCreateInstance(new TestProvider(ServiceProvider, _serializedScopes), type);
+        return new TestProvider(ServiceProvider, _serializedScopes).GetService(type);
     }
 
     public override void DisposeScope()

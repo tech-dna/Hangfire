@@ -109,7 +109,11 @@ public class SerializedScope
     public object BackingObject()
     {
         return Convert.ChangeType(_backingObject, Implementer, CultureInfo.InvariantCulture) ??
-               (Serialization != null ? JsonConvert.DeserializeObject(Serialization, Implementer) : null);
+               (Serialization != null ? JsonConvert.DeserializeObject(Serialization, Implementer, new JsonSerializerSettings
+               {
+                   TypeNameHandling = TypeNameHandling.Auto,
+                   NullValueHandling = NullValueHandling.Ignore,
+               }) : null);
     }
     public T BackingObject<T>(object value = null)
         where T : class
@@ -127,7 +131,11 @@ public class SerializedScope
 
         //var c = Convert.ChangeType(_backingObject, Implementer, CultureInfo.InvariantCulture);
         return _backingObject as T ?? 
-               (Serialization !=null? JsonConvert.DeserializeObject<T>(Serialization):null);
+               (Serialization !=null? JsonConvert.DeserializeObject<T>(Serialization, new JsonSerializerSettings
+               {
+                   TypeNameHandling = TypeNameHandling.Auto,
+                   NullValueHandling = NullValueHandling.Ignore,
+               }) :null);
     }
     public string Serialization { get; set; }
     public Type Implementer
@@ -160,10 +168,18 @@ public class SerializedScope
         var interfaceList = implementedInterfaces.ToList();
         interfaceList.Add(Implementer);
         ImplementedInterfaces = interfaceList;
-        Serialization = JsonConvert.SerializeObject(implementer);
+        Serialization = JsonConvert.SerializeObject(implementer, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            NullValueHandling = NullValueHandling.Ignore,
+        });
     }
     public override string ToString()
     {
-        return JsonConvert.SerializeObject(this);
+        return JsonConvert.SerializeObject(this, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            NullValueHandling = NullValueHandling.Ignore,
+        });
     }
 }

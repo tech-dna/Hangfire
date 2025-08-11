@@ -11,33 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Hangfire.AspNetCore
 {
-    public class PropertyCopier
-    {
-        public static void CopyProperties(object source, object destination)
-        {
-            if (source == null || destination == null)
-                return;
-
-            //Type sourceType = source.GetType();
-            //Type destinationType = destination.GetType();
-
-            //var sourceProperties = sourceType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            //var destinationProperties = destinationType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            //foreach (var sourceProperty in sourceProperties)
-            //{
-            //    if (!sourceProperty.CanRead) continue;
-
-            //    var destinationProperty = destinationProperties
-            //        .FirstOrDefault(d => d.Name == sourceProperty.Name && d.PropertyType == sourceProperty.PropertyType);
-
-            //    if (destinationProperty != null && destinationProperty.CanWrite)
-            //    {
-            //        destinationProperty.SetValue(destination, sourceProperty.GetValue(source));
-            //    }
-            //}
-        }
-    }
     public interface IQueueContext
     {
         T SetValue<T>(T newObject);
