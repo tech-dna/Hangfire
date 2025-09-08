@@ -107,6 +107,15 @@ namespace Hangfire
         {
         }
 
+        public void OnStart(JobActivatorScope scope, PerformContext context)
+        {
+            
+        }
+
+        public void OnEnd(JobActivatorScope scope, PerformContext context)
+        {
+        }
+
         public void OnPerforming(PerformingContext context)
         {
             var cultureName = context.GetJobParameter<string>("CurrentCulture", allowStale: true);

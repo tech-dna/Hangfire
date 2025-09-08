@@ -5,11 +5,36 @@ using Hangfire;
 using Hangfire.AspNetCore;
 using Hangfire.Common;
 using Hangfire.States;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
 namespace Hangfire.NetCore.Tests.AspNetCore
 {
+    interface ITestInterface
+    {
+        void SetValue(string value);
+        string Value { get; }
+    }
+
+    class PropertyBag
+    {
+        public string Value { get; set; }
+    }
+    class TestInterface_Impl : ITestInterface
+    {
+        private PropertyBag _bag;
+        public string Value => _bag.Value;
+        public TestInterface_Impl(PropertyBag bag)
+        {
+            _bag = bag;
+        }
+        public void SetValue(string value)
+        {
+            _bag.Value = value;
+        }
+    }
+
     public class ScopedQueueClientTests
     {
         public class DummyJob
@@ -122,6 +147,46 @@ namespace Hangfire.NetCore.Tests.AspNetCore
 
             // Act & Assert
             Assert.Throws<NotImplementedException>(() => client.Configure(scope, instance));
+        }
+
+        [Fact]
+        public void TestServiceScopes()
+        {
+#if NET46_OR_GREATER
+            var aa = new ServiceCollection();
+            aa.AddScoped<PropertyBag>();
+            aa.AddScoped<ITestInterface, TestInterface_Impl>();
+            var serializedScopes = new SerializedScopes();
+            serializedScopes.Add<PropertyBag>(
+                new SerializedScope(new PropertyBag{ Value = "ok jim 33"})
+                );
+            using (var provider1 = aa.BuildServiceProvider())
+            {
+                var x = provider1.GetService<ITestInterface>();
+                x.SetValue("ok jim");
+                var y = provider1.GetService<IServiceScopeFactory>();
+                var activator = new HangfireJobActivator(y);
+                using (var g = activator.BeginScope((JobActivatorContext)null, serializedScopes))
+                {
+                    var abc = g.Resolve(typeof(ITestInterface)) as ITestInterface;
+                    var o = abc.Value;
+                    Assert.Equal("ok jim 33", o);
+                }
+                //using (var t = y.CreateScope())
+                //{
+                //    var provider2 = t.ServiceProvider;
+                //    var z = provider2.GetService<PropertyBag>()
+                        
+                        
+                //        ;
+                //    z.Value = "ok jim2";
+                    
+                //    var abc = provider2.GetService<ITestInterface>();
+                //    var o = abc.Value;
+                //    Assert.Equal("ok jim2", o);
+                //}
+            }
+#endif
         }
     }
 }

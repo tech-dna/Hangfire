@@ -26,7 +26,16 @@ public class SerializedScopes : IEnumerable<SerializedScope>
             _scopes.AddRange(scopes);
         }
     }
-
+    public void Add<T>(Func<IServiceProvider, T> implementerFactory, IEnumerable<Type> mirrors = null)
+    {
+        if (implementerFactory == null) throw new ArgumentNullException(nameof(implementerFactory));
+        Add(new SerializedScope(implementerFactory, [typeof(T)]));
+        if (mirrors == null) return;
+        foreach (var mirror in mirrors)
+        {
+            Add(new SerializedScope(implementerFactory, [mirror]));
+        }
+    }
     public void Add<T>(object implementer, IEnumerable<Type> mirrors = null)
     {
         Add(new SerializedScope(implementer, [typeof(T)]));
@@ -160,6 +169,19 @@ public class SerializedScope
         )
     {
 
+    }
+    public SerializedScope(Func<IServiceProvider, Object> implementerFactory, IEnumerable<Type> implementedInterfaces)
+    {
+        _backingObject = implementerFactory;
+        Implementer = implementerFactory.GetType();
+        var interfaceList = implementedInterfaces.ToList();
+        interfaceList.Add(Implementer);
+        ImplementedInterfaces = interfaceList;
+        Serialization = JsonConvert.SerializeObject(implementerFactory, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            NullValueHandling = NullValueHandling.Ignore,
+        });
     }
     public SerializedScope(object implementer, IEnumerable<Type> implementedInterfaces)
     {

@@ -25,9 +25,16 @@ namespace Hangfire.AspNetCore
         public override JobActivatorScope BeginScope(JobActivatorContext context)
         {
             var internalScope = _serviceScopeFactory.CreateScope();
-            var parm = context.GetJobParameter<SerializedScopes>("___SCOPE_VAR");
-            
+            var parm = context?.GetJobParameter<SerializedScopes>("___SCOPE_VAR");
+
             var scope = new HangfireJobActivatorScope(internalScope, parm);
+            return scope;
+        }
+        public JobActivatorScope BeginScope(JobActivatorContext context, SerializedScopes serializedScopes)
+        {
+            var internalScope = _serviceScopeFactory.CreateScope();
+
+            var scope = new HangfireJobActivatorScope(internalScope, serializedScopes);
             return scope;
         }
     }

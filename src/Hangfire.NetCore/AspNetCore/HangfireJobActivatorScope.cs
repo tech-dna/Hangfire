@@ -23,10 +23,11 @@ public class TestProvider : IServiceProvider
         }
 
         //var s = ActivatorUtilities.GetServiceOrCreateInstance(this, serviceType);
-
+        var serviceFromBaseProvider = _baseProvider.GetService(serviceType);
+        //var activatedNewService = ActivatorUtilities.CreateInstance(this, serviceType);
         return serviceType == typeof(IServiceProvider) ?
             this
-            : (_baseProvider.GetService(serviceType) ?? ActivatorUtilities.CreateInstance(this, serviceType));
+            : (serviceFromBaseProvider ?? ActivatorUtilities.CreateInstance(this, serviceType));
     }
 }
 public class HangfireJobActivatorScope : JobActivatorScope

@@ -56,7 +56,13 @@ namespace Hangfire.Server
                 {
                     throw new InvalidOperationException("Can't perform a background job with a null job.");
                 }
+                
                 var filterInfo = new JobFilterInfo(_filterProvider.GetFilters(context.BackgroundJob.Job));
+
+                foreach (var z in filterInfo.ClientFilters)
+                {
+                    z.OnStart(scope, context);
+                }
                 filterInfo.ScopeSetup.GetEnumerator().MoveNext();
                 if (!context.BackgroundJob.Job.Method.IsStatic)
                 {
@@ -72,6 +78,10 @@ namespace Hangfire.Server
                 var arguments = SubstituteArguments(context);
                 var result = InvokeMethod(context, instance, arguments);
 
+                foreach (var z in filterInfo.ClientFilters)
+                {
+                    z.OnEnd(scope, context);
+                }
                 return result;
             }
         }

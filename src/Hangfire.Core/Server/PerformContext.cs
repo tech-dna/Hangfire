@@ -107,7 +107,15 @@ namespace Hangfire.Server
         public IBackgroundJobPerformer Performer { get; internal set; }
 
         [CanBeNull]
+        public JobActivatorScope Provider { get; private set; }
+
+        [CanBeNull]
         public string ServerId { get; }
+
+        public void SetProvider(JobActivatorScope provider)
+        {
+            Provider = provider;
+        }
 
         public void SetJobParameter([NotNull] string name, object value)
         {

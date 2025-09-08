@@ -13,6 +13,8 @@
 // You should have received a copy of the GNU Lesser General Public 
 // License along with Hangfire. If not, see <http://www.gnu.org/licenses/>.
 
+using Hangfire.Server;
+
 namespace Hangfire.Client
 {
     /// <summary>
@@ -31,5 +33,8 @@ namespace Hangfire.Client
         /// </summary>
         /// <param name="context">The filter context.</param>
         void OnCreated(CreatedContext context);
+
+        void OnStart(JobActivatorScope scope, PerformContext context);
+        void OnEnd(JobActivatorScope scope, PerformContext context);
     }
 }

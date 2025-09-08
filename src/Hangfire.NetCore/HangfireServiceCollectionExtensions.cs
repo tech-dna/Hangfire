@@ -105,12 +105,7 @@ namespace Hangfire
                 
                 return configurationInstance;
             });
-            services.AddScoped<ScopedQueueClient>(sz =>
-            {
-                return new ScopedQueueClient(sz.GetService<JobStorage>(),
-                    sz.GetService<DefaultClientManagerFactory>(),
-                    sz.GetService<IEnumerable<IQueueScopeConfigurator>>());
-            });
+            services.AddScoped<ScopedQueueClient>();
             return services;
         }
 
