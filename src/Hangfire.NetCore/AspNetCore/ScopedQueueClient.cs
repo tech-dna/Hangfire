@@ -43,7 +43,6 @@ namespace Hangfire.AspNetCore
     {
         Scoped,Singleton,Transient
     }
-
     public class ScopedQueueClient
     {
         private IEnumerable<IQueueScopeConfigurator> _configurators;
