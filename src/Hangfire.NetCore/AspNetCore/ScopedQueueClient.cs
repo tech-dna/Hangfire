@@ -38,7 +38,6 @@ namespace Hangfire.AspNetCore
             return scope;
         }
     }
-
     public enum SerializedScopeLifetime
     {
         Scoped,Singleton,Transient

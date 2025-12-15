@@ -54,14 +54,4 @@ public class HangfireJobActivatorScope : JobActivatorScope
         //return ActivatorUtilities.GetServiceOrCreateInstance(new TestProvider(ServiceProvider, _serializedScopes), type);
         return new TestProvider(ServiceProvider, _serializedScopes).GetService(type);
     }
-
-    public override void DisposeScope()
-    {
-        //var db = _serviceScope.ServiceProvider.GetService<DbContext>();
-        //db.SaveChanges();
-        //if (this._serviceScope is IAsyncDisposable serviceScope)
-        //    serviceScope.DisposeAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-        //else
-        this._serviceScope.Dispose();
-    }
 }
