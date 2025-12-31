@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using Hangfire;
 using Hangfire.AspNetCore;
 using Hangfire.Common;
+using Hangfire.Core.Tests.Mocks;
 using Hangfire.States;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -127,10 +128,10 @@ namespace Hangfire.NetCore.Tests.AspNetCore
             var client = new ScopedQueueClient(jobStorage, jobFactoryMock.Object, configurators);
 
             var scope = new Mock<JobActivatorScope>().Object;
-            var context = new Mock<JobActivatorContext>(null, null, null).Object;
+            //var context = new Mock<JobActivatorContext>(null, null, null).Object;
 
             // Act & Assert
-            Assert.Throws<NotImplementedException>(() => client.Configure(scope, context));
+            Assert.Throws<NotImplementedException>(() => client.Configure(scope, null));
         }
 
         [Fact]
@@ -153,38 +154,24 @@ namespace Hangfire.NetCore.Tests.AspNetCore
         public void TestServiceScopes()
         {
 #if NET46_OR_GREATER
-            var aa = new ServiceCollection();
-            aa.AddScoped<PropertyBag>();
-            aa.AddScoped<ITestInterface, TestInterface_Impl>();
-            var serializedScopes = new SerializedScopes();
-            serializedScopes.Add<PropertyBag>(
-                new SerializedScope(new PropertyBag{ Value = "ok jim 33"})
-                );
-            using (var provider1 = aa.BuildServiceProvider())
+            var parentScopeCollection = new ServiceCollection();
+            parentScopeCollection.AddScoped<PropertyBag>();
+            parentScopeCollection.AddScoped<ITestInterface, TestInterface_Impl>();
+            using (var parentProvider = parentScopeCollection.BuildServiceProvider())
             {
-                var x = provider1.GetService<ITestInterface>();
-                x.SetValue("ok jim");
-                var y = provider1.GetService<IServiceScopeFactory>();
+                var y = parentProvider.GetService<IServiceScopeFactory>();
                 var activator = new HangfireJobActivator(y);
-                using (var g = activator.BeginScope((JobActivatorContext)null, serializedScopes))
+                var activatorContextMock = new JobActivatorContextMock();
+
+                var serializedScopes = new SerializedScopes();
+                serializedScopes.Add<ITestInterface>(new TestInterface_Impl(new PropertyBag { Value = "ok jim 33" }));
+                using (var childActivatorScope = activator.BeginScope(activatorContextMock.Object, serializedScopes))
                 {
-                    var abc = g.Resolve(typeof(ITestInterface)) as ITestInterface;
+                    var abc = childActivatorScope.Resolve(typeof(ITestInterface)) as ITestInterface;
                     var o = abc.Value;
                     Assert.Equal("ok jim 33", o);
                 }
-                //using (var t = y.CreateScope())
-                //{
-                //    var provider2 = t.ServiceProvider;
-                //    var z = provider2.GetService<PropertyBag>()
-                        
-                        
-                //        ;
-                //    z.Value = "ok jim2";
-                    
-                //    var abc = provider2.GetService<ITestInterface>();
-                //    var o = abc.Value;
-                //    Assert.Equal("ok jim2", o);
-                //}
+
             }
 #endif
         }

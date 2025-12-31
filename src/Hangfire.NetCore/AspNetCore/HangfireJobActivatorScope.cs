@@ -44,14 +44,12 @@ public class HangfireJobActivatorScope : JobActivatorScope
 
     public override object Resolve(Type type)
     {
-        //var ser = type.IsArray ? _serializedScopes.GetAll(type) : _serializedScopes.GetServiceScope(type);
-
-        //if (ser != null)
-        //{
-        //    return ser;
-        //}
-
-        //return ActivatorUtilities.GetServiceOrCreateInstance(new TestProvider(ServiceProvider, _serializedScopes), type);
         return new TestProvider(ServiceProvider, _serializedScopes).GetService(type);
+    }
+
+    public override void DisposeScope()
+    {
+        _serviceScope.Dispose();
+        base.DisposeScope();
     }
 }

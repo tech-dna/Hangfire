@@ -47,6 +47,7 @@ namespace Hangfire.AspNetCore
         private IEnumerable<IQueueScopeConfigurator> _configurators;
         private IBackgroundJobClientFactoryV2 _jobFactory;
         private JobStorage _jobStorage;
+        public ScopedQueueClient(){}
         public ScopedQueueClient(JobStorage jobStorage, IBackgroundJobClientFactoryV2 jobFactory, IEnumerable<IQueueScopeConfigurator> configurators)
         {
             _configurators = configurators;

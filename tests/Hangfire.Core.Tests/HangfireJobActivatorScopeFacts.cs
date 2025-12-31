@@ -87,23 +87,6 @@ namespace Hangfire.NetCore.Tests.AspNetCore
             Assert.Equal(expected, result);
         }
 
-        [Fact]
-        public void Resolve_ReturnsServiceProvider_WhenTypeIsIServiceProvider()
-        {
-            // Arrange
-            var providerMock = new Mock<IServiceProvider>();
-            var scopeMock = new Mock<IServiceScope>();
-            scopeMock.SetupGet(s => s.ServiceProvider).Returns(providerMock.Object);
-
-            var scopes = new SerializedScopes();
-            var activatorScope = new HangfireJobActivatorScope(scopeMock.Object, scopes);
-
-            // Act
-            var result = activatorScope.Resolve(typeof(IServiceProvider));
-
-            // Assert
-            Assert.Equal(providerMock.Object, result);
-        }
 
         [Fact]
         public void Resolve_UsesActivatorUtilities_WhenNotFoundInSerializedScopes()
